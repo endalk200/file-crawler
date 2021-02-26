@@ -20,4 +20,7 @@ and subdirectories on the drive.
 
 ## Credit
 
-The search algorithim and the frontend GUI is designed and coded by @endalk200
+This project is created by:
+
+* [endalk200](https://github.com/endalk200)
+* [abderehim](https://github.com/abderehim)
