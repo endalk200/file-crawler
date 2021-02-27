@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Utils {
 
@@ -28,18 +30,15 @@ public class Utils {
      * 
      * @return string[]: array of drives
      */
-    public static String[] parse_drives() {
+    public static List<File> parse_drives() {
         File[] roots_list = File.listRoots();
 
-        String[] drives = new String[roots_list.length];
+        List<File> drives = new ArrayList<>();
 
-        if (roots_list != null && roots_list.length > 0) {
-            int index = 0;
-            for (File drive : roots_list) {
-                drives[index] = drive.toString();
-                index++;
-            }
+        for (File drive : roots_list) {
+            drives.add(drive);
         }
+
         return drives;
     }
 
@@ -107,26 +106,52 @@ public class Utils {
     }
 
 
-    public static void write_logfile(String message) throws IOException {
-        FileWriter fwriter = new FileWriter("log.log", true);
-        PrintWriter log_file = new PrintWriter(fwriter);
+    public static void write_logfile(String message) {
+        try(
+            FileWriter fwriter = new FileWriter("log.log", true);
+            PrintWriter log_file = new PrintWriter(fwriter);
+        ) {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formated_now = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formatted_date = now.format(formated_now);
 
-        log_file.println(message);
+            log_file.println(formatted_date + "$" + message);
+        } catch(Exception error_message) {
 
-        log_file.close();
+        }
     }
 
-    public static void read_logfile() throws IOException {
-        File log_file = new File("log.log");
-        Scanner input_file = new Scanner(log_file);
+    public static List<String[]> read_logfile() {
+        List<String[]> processed_log = new ArrayList<>();
+        try {
+            File log_file = new File("log.log");
+            Scanner input_file = new Scanner(log_file);
 
-        List<String> log = new ArrayList<String>();
+            List<String> log = new ArrayList<>();
 
-        while (input_file.hasNext()) {
-            log.add(input_file.nextLine());
+            while (input_file.hasNext()) {
+                log.add(input_file.nextLine());
+            }
+            input_file.close();
+
+            for(String line : log) {
+                String message = line.substring((line.indexOf("$") + 1), line.length());
+                String timestamp = line.substring(0, (line.indexOf("$") - 1));
+
+                String[] log_line = { timestamp, message };
+                processed_log.add(log_line);
+                // System.out.println(processed_log.get(0)[0]);
+            }
+        } catch(Exception error_message) {
+
+        } finally {
+            return processed_log;
         }
+    }
 
-        input_file.close();
+    public static void main(String[] args) {
+        write_logfile("hello");
+        System.out.println(read_logfile().get(0)[1]);
     }
 
 }

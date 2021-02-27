@@ -98,13 +98,6 @@ public class Scan {
         return found_files;
     }
 
-    public static void main(String[] args) throws IOException{
-        List<File> files = new ArrayList<>();
-        Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-        Files.walkFileTree(Paths.get("C:\\Users\\endalk\\source\\"), fileVisitOptions, 2, new FileVisitorImplementation("README", files));
-        System.out.println(files.size());
-    }
-
 }
 
 class FileVisitorImplementation implements FileVisitor<Path> {
