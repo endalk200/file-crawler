@@ -169,7 +169,6 @@ class FileVisitorImplementation implements FileVisitor<Path> {
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         if (file.toString().toLowerCase().contains(this.file_name.toLowerCase())) {
             this.files.add(file.toFile());
-            System.out.println(file);
         }
         return FileVisitResult.CONTINUE;
     }

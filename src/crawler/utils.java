@@ -81,7 +81,7 @@ public class Utils {
 
     public static void main(String[] args) throws Exception {
         write_logfile("hello");
-        System.out.println(read_logfile().get(0)[0] + " <-> " + read_logfile().get(0)[1] );
+//        System.out.println(read_logfile().get(0)[0] + " <-> " + read_logfile().get(0)[1] );
     }
 
 }
