@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Scan {
 
@@ -78,7 +81,7 @@ public class Scan {
 
     public List<File> scan() throws Exception {
         Utils.write_logfile(this.file_name);
-        List<File> found_files = new ArrayList<File>();
+        List<File> found_files = new ArrayList<>();
 
         if (this.recursive_index == 4) {
             // Shalow scan with three recursive index
@@ -106,8 +109,39 @@ public class Scan {
         return found_files;
     }
 
-    private void filter(String file_extension) {
+    private List<File> scan(String file_extension) throws Exception {
 
+        Utils.write_logfile(this.file_name);
+        List<File> found_files = new ArrayList<>();
+
+        if (this.recursive_index == 4) {
+            // Shalow scan with three recursive index
+            // Check if there is file extension filter
+            // Check if there is file created filter
+
+            for (File root_directory : this.ROOT_DIRECTORIES) {
+                Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+                Files.walkFileTree(
+                    Paths.get(root_directory.toURI()), 
+                    fileVisitOptions, this.recursive_index, new FileVisitorImplementation(
+                        this.file_name, found_files)
+                );
+            }
+
+        } else {
+            for (File root_directory : this.ROOT_DIRECTORIES) {
+                Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+                Files.walkFileTree(
+                    Paths.get(root_directory.toURI()), 
+                    fileVisitOptions, this.recursive_index, new FileVisitorImplementation(
+                        this.file_name, found_files)
+                );
+            }
+        }
+
+        Stream<File> filtered_files = found_files.stream().filter(file -> file.toString().endsWith(file_extension));
+        // filtered_files.forEach(System.out::println);
+        return filtered_files.collect(Collectors.toList());
     }
 
     private void filter(LocalDate file_created) {
@@ -121,10 +155,7 @@ public class Scan {
     public static void main(String[] args) {
         try {
             Scan scanner = new Scan("READ");
-            System.out.println("Found " + scanner.scan().size());
-            // for (File file : scanner.scan()) {
-            //     System.out.println(file);
-            // }
+            scanner.scan(".txt");
         } catch(Exception error_message) {
             System.out.println(error_message);
         }
