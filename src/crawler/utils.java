@@ -22,15 +22,17 @@ public class Utils {
 
         List<File> ROOT_DIRECTORIES = new ArrayList<>();
 
-        String[] default_c_directories_str = { "Desktop", "Documents", "Videos", "Downloads", "Pictures" };
-        for (String dir : default_c_directories_str) {
-            File directory = new File("C:\\Users\\" + System.getProperty("user.name") + "\\" + dir);
+        String[] default_windows_paths = { "Desktop", "Documents", "Videos", "Downloads", "Pictures" };
+
+        for (int i = 4; i >= 0; i--) {
+            File directory = new File("C:\\Users\\" + System.getProperty("user.name") + default_windows_paths[i]);
             ROOT_DIRECTORIES.add(directory);
         }
 
-        for (File drive : File.listRoots()) {
+        for (int number_of_partitions = File.listRoots().length; number_of_partitions >= 0; number_of_partitions--) {
             File C_DRIVE = new File("C:\\");
-            if (drive.equals(C_DRIVE)) {
+            File drive = new File(File.listRoots().toString());
+            if(C_DRIVE.equals(drive)) {
                 continue;
             }
             ROOT_DIRECTORIES.add(drive);
@@ -41,7 +43,6 @@ public class Utils {
 
     public static void write_logfile(String message) throws Exception {
         FileWriter fwriter = new FileWriter(log_file_directory, true);
-        System.out.println(log_file_directory);
         PrintWriter log_file = new PrintWriter(fwriter);
 
         LocalDateTime now = LocalDateTime.now();
@@ -80,8 +81,9 @@ public class Utils {
     }
 
     public static void main(String[] args) throws Exception {
-        write_logfile("hello");
+        // write_logfile("hello");
 //        System.out.println(read_logfile().get(0)[0] + " <-> " + read_logfile().get(0)[1] );
+        System.out.println(get_root_directories());
     }
 
 }

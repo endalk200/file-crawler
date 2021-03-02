@@ -109,9 +109,10 @@ public class Scan {
         return found_files;
     }
 
-    private List<File> scan(String file_extension) throws Exception {
+    public List<File> scan(String file_extension) throws Exception {
 
         Utils.write_logfile(this.file_name);
+
         List<File> found_files = new ArrayList<>();
 
         if (this.recursive_index == 4) {
@@ -140,7 +141,7 @@ public class Scan {
         }
 
         Stream<File> filtered_files = found_files.stream().filter(file -> file.toString().endsWith(file_extension));
-        // filtered_files.forEach(System.out::println);
+//        filtered_files.forEach(System.out::println);
         return filtered_files.collect(Collectors.toList());
     }
 
@@ -154,8 +155,9 @@ public class Scan {
 
     public static void main(String[] args) {
         try {
-            Scan scanner = new Scan("READ");
-            scanner.scan(".txt");
+//            Scan scanner = new Scan("READ");
+            Scan scanner = new Scan("READ", Integer.MAX_VALUE);
+            System.out.println("\nFound " + scanner.scan(".md").size());
         } catch(Exception error_message) {
             System.out.println(error_message);
         }
@@ -200,6 +202,7 @@ class FileVisitorImplementation implements FileVisitor<Path> {
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         if (file.toString().toLowerCase().contains(this.file_name.toLowerCase())) {
             this.files.add(file.toFile());
+//            System.out.println(file.toString());
         }
         return FileVisitResult.CONTINUE;
     }
