@@ -15,150 +15,63 @@ import java.util.stream.Stream;
 
 public class Scan {
 
-    private List<File> ROOT_DIRECTORIES;
+    private List<File> ROOT_DIRECTORIES = new ArrayList<>();
 
-    private int recursive_index;
+    private int recursive_index = 4;
 
     private String file_name;
-    private String file_extension;
-    private LocalDate file_created;
 
     public Scan(String file_name) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = 4;
+        this.recursive_index = 5;
+        this.set_root_directories();
         this.file_name = file_name;
     }
 
-    public Scan(String file_name, int recursive_index) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = recursive_index;
-        this.file_name = file_name;
-    }
+    public void set_root_directories() {
 
-    public Scan(String file_name, String file_extension) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = 4;
-        this.file_name = file_name;
-        this.file_extension = file_extension;
-    }
+        String[] default_windows_paths = { "Desktop", "Documents", "Videos", "Downloads", "Pictures" };
 
-    public Scan(String file_name, String file_extension, int recursive_index) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = recursive_index;
-        this.file_name = file_name;
-        this.file_extension = file_extension;
-    }
+        for (String dir : default_windows_paths) {
+            File path = new File("C:\\Users\\" + System.getProperty("user.name") + "\\" + dir + "\\");
+            this.ROOT_DIRECTORIES.add(path);
+        }
 
-    public Scan(String file_name, LocalDate file_created) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = 4;
-        this.file_name = file_name;
-        this.file_created = file_created;
-    }
-
-    public Scan(String file_name, LocalDate file_created, int recursive_index) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = recursive_index;
-        this.file_name = file_name;
-        this.file_created = file_created;
-    }
-
-    public Scan(String file_name, String file_extension, LocalDate file_created) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = 4;
-        this.file_name = file_name;
-        this.file_extension = file_extension;
-        this.file_created = file_created;
-    }
-
-    public Scan(String file_name, String file_extension, LocalDate file_created, int recursive_index) {
-        this.ROOT_DIRECTORIES = Utils.get_root_directories();
-        this.recursive_index = 4;
-        this.file_name = file_name;
-        this.file_extension = file_extension;
-        this.file_created = file_created;
+        for (File partition : File.listRoots()) {
+            File C_DRIVE = new File("C:\\");
+            if (C_DRIVE.equals(partition)) {
+                continue;
+            }
+            this.ROOT_DIRECTORIES.add(partition);
+        }
     }
 
     public List<File> scan() throws Exception {
-        Utils.write_logfile(this.file_name);
+
         List<File> found_files = new ArrayList<>();
 
-        if (this.recursive_index == 4) {
-            // Shalow scan with three recursive index
-            // Check if there is file extension filter
-            // Check if there is file created filter
+        for (File root_directory : this.ROOT_DIRECTORIES) {
 
-            for (File root_directory : this.ROOT_DIRECTORIES) {
-                Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-                Files.walkFileTree(
-                    Paths.get(root_directory.toURI()), 
-                    fileVisitOptions, this.recursive_index, new FileVisitorImplementation(
-                        this.file_name, found_files)
-                );
-            }
-        } else {
-            for (File root_directory : this.ROOT_DIRECTORIES) {
-                Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-                Files.walkFileTree(
-                    Paths.get(root_directory.toURI()), 
-                    fileVisitOptions, this.recursive_index, new FileVisitorImplementation(
-                        this.file_name, found_files)
-                );
-            }
+            Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+
+            Files.walkFileTree(
+                Paths.get(root_directory.toURI()), 
+                fileVisitOptions, 
+                this.recursive_index, 
+                new FileVisitorImplementation(
+                    this.file_name, found_files
+                )
+            );
+
         }
         return found_files;
     }
 
-    public List<File> scan(String file_extension) throws Exception {
-
-        Utils.write_logfile(this.file_name);
-
-        List<File> found_files = new ArrayList<>();
-
-        if (this.recursive_index == 4) {
-            // Shalow scan with three recursive index
-            // Check if there is file extension filter
-            // Check if there is file created filter
-
-            for (File root_directory : this.ROOT_DIRECTORIES) {
-                Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-                Files.walkFileTree(
-                    Paths.get(root_directory.toURI()), 
-                    fileVisitOptions, this.recursive_index, new FileVisitorImplementation(
-                        this.file_name, found_files)
-                );
-            }
-
-        } else {
-            for (File root_directory : this.ROOT_DIRECTORIES) {
-                Set<FileVisitOption> fileVisitOptions = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-                Files.walkFileTree(
-                    Paths.get(root_directory.toURI()), 
-                    fileVisitOptions, this.recursive_index, new FileVisitorImplementation(
-                        this.file_name, found_files)
-                );
-            }
-        }
-
-        Stream<File> filtered_files = found_files.stream().filter(file -> file.toString().endsWith(file_extension));
-//        filtered_files.forEach(System.out::println);
-        return filtered_files.collect(Collectors.toList());
-    }
-
-    private void filter(LocalDate file_created) {
-
-    }
-
-    private void filter(String file_extension, LocalDate file_created) {
-
-    }
-
     public static void main(String[] args) {
         try {
-//            Scan scanner = new Scan("READ");
-            Scan scanner = new Scan("READ", Integer.MAX_VALUE);
-            System.out.println("\nFound " + scanner.scan(".md").size());
-        } catch(Exception error_message) {
+            Scan scanner = new Scan("README");
+            List<File> files = scanner.scan();
+            System.out.println("Found " + files.size() + " files matching your query");;
+        } catch (Exception error_message) {
             System.out.println(error_message);
         }
     }
@@ -202,7 +115,6 @@ class FileVisitorImplementation implements FileVisitor<Path> {
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         if (file.toString().toLowerCase().contains(this.file_name.toLowerCase())) {
             this.files.add(file.toFile());
-//            System.out.println(file.toString());
         }
         return FileVisitResult.CONTINUE;
     }
