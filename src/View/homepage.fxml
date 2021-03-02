@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="400" maxWidth="600" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0"
+      styleClass="main_container" stylesheets="@style.css" xmlns="http://javafx.com/javafx/15.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller">
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" onAction="#close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" onAction="#clear" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" onAction="#about" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <AnchorPane styleClass="main_anchor" prefHeight="382.0" prefWidth="600.0">
+            <children>
+                <TextField fx:id="filename_field" layoutX="7.0" layoutY="8.0" prefHeight="25.0" prefWidth="520.0"
+                           promptText="Enter file name here" styleClass="search_field" />
+                <Button fx:id="search_btn" layoutX="542.0" layoutY="8.0" mnemonicParsing="false" onAction="#scan"
+                        prefHeight="25.0" prefWidth="50.0" styleClass="search_btn" text="search" />
+                <ListView fx:id="search_result" layoutX="9.0" layoutY="64.0" prefHeight="298.0" prefWidth="584.0"
+                          onMouseClicked="#handle_mouse_clicked"
+                          styleClass="search_result" />
+                <Label fx:id="message_board" layoutX="9.0" layoutY="32.0" prefHeight="33.0" prefWidth="584.0"
+                       style="-fx-font-weight: 600"
+                       styleClass="message_board" text="INFO: Enter filename and click search to search for the file" />
+            </children>
+        </AnchorPane>
+    </children>
+</VBox>
