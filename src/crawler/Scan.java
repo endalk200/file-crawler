@@ -4,30 +4,34 @@ package crawler;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Scan {
 
     private List<File> ROOT_DIRECTORIES = new ArrayList<>();
-
-    private int recursive_index = 4;
-
+    private int recursive_index = 7;
     private String file_name;
 
+    /**
+     * Scan class class to instantiate the file crawling operation. This
+     * class takes file_name as a parameter.
+     * @param file_name name of the file to search for.
+     * */
     public Scan(String file_name) {
         this.recursive_index = 5;
         this.set_root_directories();
         this.file_name = file_name;
     }
 
-    public void set_root_directories() {
+    /**
+     * set_root_directories()
+     * this methods sets the root directories or starting point for the
+     * walkFileTree to start searching for the file.
+     * */
+    private void set_root_directories() {
 
         String[] default_windows_paths = { "Desktop", "Documents", "Videos", "Downloads", "Pictures" };
 
@@ -36,6 +40,7 @@ public class Scan {
             this.ROOT_DIRECTORIES.add(path);
         }
 
+        // File.listRoots() returns array of drive partitions in the users computer
         for (File partition : File.listRoots()) {
             File C_DRIVE = new File("C:\\");
             if (C_DRIVE.equals(partition)) {
@@ -45,6 +50,13 @@ public class Scan {
         }
     }
 
+    /**
+     * scan() : scan method is called to crawl the drive and search
+     * for the specified file using the filename. returns List<File>.
+     * @return List of files found by scanning the drive
+     * @exception throws all exceptions that could arise from File and Files
+     * class operations like FileNotFoundError, AccessDeniedException
+     * */
     public List<File> scan() throws Exception {
 
         List<File> found_files = new ArrayList<>();
@@ -64,16 +76,6 @@ public class Scan {
 
         }
         return found_files;
-    }
-
-    public static void main(String[] args) {
-        try {
-            Scan scanner = new Scan("README");
-            List<File> files = scanner.scan();
-            System.out.println("Found " + files.size() + " files matching your query");;
-        } catch (Exception error_message) {
-            System.out.println(error_message);
-        }
     }
 }
 
@@ -127,5 +129,4 @@ class FileVisitorImplementation implements FileVisitor<Path> {
     public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
         return FileVisitResult.CONTINUE;
     }
-
 }
