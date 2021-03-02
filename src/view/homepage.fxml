@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="400" maxWidth="600" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" styleClass="main_container" stylesheets="@style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<VBox maxHeight="400" maxWidth="600" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" styleClass="main_container" stylesheets="@style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainController">
     <children>
         <MenuBar>
             <menus>
