@@ -17,10 +17,3 @@ directory tree deep.
 
 Deep search scans all directory tree in recursive manner. This will scann all directories
 and subdirectories on the drive.
-
-## Credit
-
-This project is created by:
-
-* [endalk200](https://github.com/endalk200)
-* [abderehim](https://github.com/abderehim)
