@@ -1,4 +1,4 @@
-# File-Crawler
+# :file_folder: File-Crawler
 
 Open Source java application for performing basic file related operations like searching for a given file in the drive. The application currently has the 
 following features and functionaloties.
